@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, ImageBackground } from 'react-native'
+import {
+    StyleSheet,
+    Text,
+    View,
+    ImageBackground,
+    FlatList
+} from 'react-native'
 import moment from 'moment';
 import 'moment/locale/pt-br';
 import * as Font from 'expo-font';
@@ -11,6 +17,17 @@ import Task from '../components/Task'
 export default class Agenda extends Component {
     state = {
         fontLoaded: false,
+        task: [
+            {
+                id: Math.random(), desc: 'Comprar Curso Reacr-Native',
+                estimateAt: new Date(), doneAt: new Date()
+            },
+            {
+                id: Math.random(), desc: 'Concluir o curso', estimateAt: new Date,
+                doneAt: null,
+            },
+
+        ]
     };
     async componentDidMount() {
         await Font.loadAsync({
@@ -38,10 +55,13 @@ export default class Agenda extends Component {
                     </View>
                 </ImageBackground>
                 <View style={styles.taksContainer}>
-                    <Task desc='tarefa pendente'
-                        estimateAt={new Date()} doneAt={null} />
-                    <Task desc='Tarefa Concluida'
-                        estimateAt={new Date()} doneAt={new Date()} />
+                    {
+                        this.state.fontLoaded ? (
+                             <FlatList data={this.state.task} 
+                             keyExtractor={item => `${item.id}`}
+                              renderItem={({item}) => <Task {...item}/>}/>
+                        ) : null}
+                    
                 </View>
             </View>
         )

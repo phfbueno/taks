@@ -4,70 +4,52 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment'
 import 'moment/locale/pt-br'
 import commonStyles from '../commonStyle'
-import * as Font from 'expo-font'
-import Agenda from '../screens/Agenda'
 
 
 
 export default props => {
 
-    state = {
-        fontLoaded: false,
-    };
-    async componentDidMount() {
-        await Font.loadAsync({
-            'lato': require('../../assets/fonts/Lato.ttf'),
-        });
-        this.setState({ fontLoaded: true });
+    let check = null
+    if (props.doneAt !== null) {
+
+
+        check = (
+            <View style={styles.done}>
+                <Icon name='check' size={20}
+                    color={commonStyles.colors.secondary} />
+            </View>
+        )
+    } else {
+        check = <View style={styles.pending} />
     }
-}
-
-let check = null
-if (props.doneAt !== null) {
+    const descStyle = props.doneAt !== null ?
+        { textDecorationLine: 'line-through' } : {}
 
 
-    check = (
-        <View style={styles.done}>
-            <Icon name='check' size={20}
-                color={commonStyles.colors.secondary} />
+
+    return (
+
+        <View style={styles.container}>
+            <View style={styles.checkContainer}>
+                {check}
+            </View>
+            <View>
+                <Text style={[styles.description, descStyle]}>
+                    {props.desc}
+                </Text>
+                <Text style={styles.date}>{moment(props.estimateAt).locale('pt-br').format('ddd, D [de] MMMM')}
+                </Text>
+            </View>
         </View>
     )
-} else {
-    check = <View style={styles.pending} />
 }
-const descStyle = props.doneAt !== null ?
-    { textDecorationLine: 'line-through' } : {}
-
-
-return (
-
-    <View style={styles.container}>
-        <View style={styles.checkContainer}>
-            {check}
-        </View>
-        <View>
-            {
-                this.state.fontLoaded ? (
-                    <Text styles={[styles.description, descStyle]}>
-                        {props.desc}
-                    </Text>
-                ) : null}
-            {
-                this.state.fontLoaded ? (
-                    <Text style={styles.date}>{moment(props.estimateAt).locale('pt-br').format('ddd, D [de] MMMM')}
-                    </Text>
-                ) : null}
-        </View>
-    </View>
-)
-
 
 
 const styles = StyleSheet.create({
     container: {
         paddingVertical: 10,
         flexDirection: 'row',
-        borderEndWidth: 1,
+        borderBottomWidth: 1,
         borderColor: '#AAA',
     },
     checkContainer: {
@@ -92,12 +74,12 @@ const styles = StyleSheet.create({
 
     },
     description: {
-        fontFamily: lato,
+        //fontFamily: Agenda.title.fontFamily,
         color: commonStyles.colors.mainText,
-        fontSize: 12,
+        fontSize: 20,
     },
     date: {
-        fontFamily: lato,
+        //fontFamily: Agenda.title.fontFamily,
         color: commonStyles.colors.subText,
         fontSize: 12,
     }
